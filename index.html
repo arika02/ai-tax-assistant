@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Tax Assistant - ผู้ช่วยภาษีฉบับมือใหม่</title>
+    <title>Tax Buddy - ผู้ช่วยภาษีฉบับมือใหม่</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt -->
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons (Minimalist Icons) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { font-family: 'Prompt', sans-serif; background-color: #f3f4f6; }
-        /* แต่ง Scrollbar ให้ดูสะอาดตา */
+        body { font-family: 'Prompt', sans-serif; background-color: #f8fafc; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
@@ -17,145 +20,193 @@
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col">
 
-    <header class="bg-white shadow-sm sticky top-0 z-10">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+    <!-- Header สุดมินิมอล -->
+    <header class="bg-white shadow-sm sticky top-0 z-10 border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-5 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <div class="bg-blue-100 p-2 rounded-xl text-2xl">🐻‍❄️</div>
+                <div class="bg-blue-50 text-blue-600 p-2.5 rounded-xl">
+                    <i data-lucide="calculator" class="w-6 h-6"></i>
+                </div>
                 <div>
-                    <h1 class="text-xl font-bold text-slate-800 leading-tight">Tax Buddy</h1>
-                    <p class="text-xs text-slate-500">ผู้ช่วยภาษีฉบับมือใหม่ เข้าใจง่าย ไม่ปวดหัว</p>
+                    <h1 class="text-lg font-bold text-slate-800 leading-tight">Tax Buddy</h1>
+                    <p class="text-xs text-slate-500 font-medium">ระบบผู้ช่วยจัดการภาษี</p>
                 </div>
             </div>
             <div class="hidden sm:flex items-center space-x-2 text-xs font-medium text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100">
-                <span class="relative flex h-2 w-2">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                <span>อัปเดตกฎหมายภาษีล่าสุดแล้ว</span>
+                <i data-lucide="shield-check" class="w-4 h-4"></i>
+                <span>อัปเดตกฎหมายภาษีล่าสุด</span>
             </div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto w-full p-4 grid grid-cols-1 lg:grid-cols-12 gap-6 my-4 flex-grow">
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto w-full p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow">
         
+        <!-- ฝั่งซ้าย: เครื่องคิดเลข และ เช็กลิสต์ (กินพื้นที่ 7 ส่วน) -->
         <div class="lg:col-span-7 flex flex-col space-y-6">
             
+            <!-- 1. การ์ดเครื่องคิดเลขภาษี -->
             <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 md:p-8">
                 <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-                    🧮 คำนวณภาษีแบบด่วนจี๋
+                    <i data-lucide="coins" class="w-6 h-6 text-blue-600"></i>
+                    ประเมินภาษีเบื้องต้น
                 </h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-5">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-2">1. งานหลักของคุณคืออะไร?</label>
-                            <select id="income-type" class="w-full border-2 border-slate-200 rounded-xl p-3 text-sm focus:ring-0 focus:border-blue-500 transition-colors bg-slate-50 hover:bg-white" onchange="calculateTax()">
-                                <option value="40_2">💻 ฟรีแลนซ์ / รับจ้างทั่วไป (ไม่มีทีมงาน)</option>
-                                <option value="40_7">🎥 งานโปรดักชัน / รับเหมา (มีอุปกรณ์/ทีมงาน)</option>
-                                <option value="40_1">🏢 พนักงานออฟฟิศ (รับเงินเดือน)</option>
+                    <!-- โซนกรอกข้อมูล -->
+                    <div class="space-y-6">
+                        <!-- คำถาม 1 -->
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 hover:border-blue-100 transition-colors">
+                            <label class="block text-sm font-semibold text-slate-700 mb-3">1. ลักษณะงานที่คุณทำ?</label>
+                            <select id="income-type" class="w-full border-0 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-400 shadow-sm text-slate-700 bg-white" onchange="calculateTax()">
+                                <option value="40_2">รับงานทำเองคนเดียว (ฟรีแลนซ์, กราฟิก)</option>
+                                <option value="40_7">รับเหมาโปรดักชัน (ต้องใช้อุปกรณ์/ทีมงาน)</option>
+                                <option value="40_1">พนักงานบริษัท (รับเงินเดือน)</option>
                             </select>
                         </div>
 
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-2">2. รายได้รวมทั้งปี (ประมาณเอาได้)</label>
+                        <!-- คำถาม 2 -->
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 hover:border-blue-100 transition-colors">
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">2. รายได้รวมทั้งปีโดยประมาณ</label>
+                            <p class="text-[11px] text-slate-500 mb-3">รวมทุกยอดที่ลูกค้าโอนเข้าบัญชีตลอดปี</p>
                             <div class="relative">
-                                <input type="number" id="gross-income" value="450000" class="w-full border-2 border-slate-200 rounded-xl pl-4 pr-12 py-3 text-lg font-bold text-blue-600 focus:ring-0 focus:border-blue-500 transition-colors" oninput="calculateTax()">
-                                <span class="absolute right-4 top-3.5 text-slate-400 font-medium">บาท</span>
+                                <i data-lucide="banknote" class="absolute left-3 top-3.5 w-5 h-5 text-slate-400"></i>
+                                <input type="number" id="gross-income" value="450000" class="w-full border border-slate-200 rounded-xl pl-10 pr-12 py-3 text-lg font-bold text-blue-600 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition-all shadow-sm bg-white" oninput="calculateTax()">
+                                <span class="absolute right-4 top-3.5 text-slate-400 font-medium text-sm">THB</span>
                             </div>
                         </div>
 
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-2">3. มีซื้อประกันหรือกองทุนไหม? (ถ้าไม่มี ปล่อยว่าง)</label>
+                        <!-- คำถาม 3 -->
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 hover:border-blue-100 transition-colors">
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">3. ยอดลดหย่อนภาษีที่มี</label>
+                            <p class="text-[11px] text-slate-500 mb-3">เช่น ค่าประกันชีวิต, กองทุนรวม (ถ้าไม่มี ปล่อยเป็น 0)</p>
                             <div class="relative">
-                                <input type="number" id="allowance" value="0" placeholder="รวมยอดเงินที่จ่ายไป..." class="w-full border-2 border-slate-200 rounded-xl pl-4 pr-12 py-3 text-sm focus:ring-0 focus:border-blue-500 transition-colors" oninput="calculateTax()">
-                                <span class="absolute right-4 top-3.5 text-slate-400 font-medium">บาท</span>
+                                <i data-lucide="piggy-bank" class="absolute left-3 top-3 w-5 h-5 text-slate-400"></i>
+                                <input type="number" id="allowance" value="0" class="w-full border border-slate-200 rounded-xl pl-10 pr-12 py-2.5 text-sm font-medium focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none transition-all shadow-sm bg-white" oninput="calculateTax()">
+                                <span class="absolute right-4 top-3 text-slate-400 font-medium text-xs">THB</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl p-6 text-white flex flex-col justify-center relative overflow-hidden shadow-lg">
-                        <div class="absolute -right-10 -top-10 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl"></div>
+                    <!-- โซนแสดงผลลัพธ์ -->
+                    <div class="bg-slate-900 rounded-2xl p-6 text-white flex flex-col justify-center relative overflow-hidden shadow-lg border border-slate-800">
+                        <!-- BG Decoration -->
+                        <div class="absolute -right-16 -top-16 w-40 h-40 bg-blue-500 opacity-20 rounded-full blur-3xl"></div>
                         
-                        <p class="text-blue-100 text-sm mb-1">สรุปยอดภาษีที่ต้องจ่ายปีนี้</p>
-                        <p class="text-4xl md:text-5xl font-bold tracking-tight mb-4" id="out-tax-due">0 <span class="text-xl font-normal opacity-80">บาท</span></p>
+                        <p class="text-slate-400 text-sm font-medium mb-1">สรุปภาษีสุทธิที่ต้องชำระ</p>
+                        <div class="flex items-baseline gap-2 mb-6">
+                            <p class="text-4xl md:text-5xl font-bold tracking-tight text-white" id="out-tax-due">0</p>
+                            <p class="text-slate-400 font-medium">บาท</p>
+                        </div>
                         
-                        <div class="bg-white/20 rounded-xl p-4 backdrop-blur-sm mt-auto">
-                            <p class="text-xs text-blue-100 mb-1">💡 ทริคคนเก่ง: หยอดกระปุกเดือนละ</p>
-                            <p class="text-lg font-semibold" id="out-monthly-save">0 บาท</p>
+                        <div class="bg-slate-800/50 rounded-xl p-4 border border-slate-700 mt-auto">
+                            <div class="flex items-center gap-2 mb-1 text-blue-300">
+                                <i data-lucide="target" class="w-4 h-4"></i>
+                                <p class="text-xs font-semibold">เป้าหมายสำรองเงินต่อเดือน</p>
+                            </div>
+                            <p class="text-lg font-semibold text-white" id="out-monthly-save">0 บาท</p>
                         </div>
 
-                        <div id="vat-warning" class="hidden mt-4 bg-red-500/90 text-white p-3 rounded-xl text-xs font-medium border border-red-400 flex items-start gap-2">
-                            <span class="text-lg leading-none">🚨</span>
-                            <span>รายได้เกิน 1.8 ล้านบาทแล้ว! คุณต้องไปจด VAT 7% ภายใน 30 วันนะครับ ไม่งั้นโดนปรับหนักมาก!</span>
+                        <!-- แจ้งเตือน VAT -->
+                        <div id="vat-warning" class="hidden mt-4 bg-red-500/10 text-red-400 p-3 rounded-xl text-xs font-medium border border-red-500/20 flex items-start gap-2">
+                            <i data-lucide="alert-triangle" class="w-5 h-5 flex-shrink-0"></i>
+                            <span class="leading-relaxed">รายได้เกิน 1.8 ล้านบาท! คุณต้องดำเนินการจด VAT 7% ภายใน 30 วันเพื่อหลีกเลี่ยงค่าปรับย้อนหลัง</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-6 pt-4 border-t border-slate-100">
-                    <p class="text-xs text-slate-500 mb-2">ที่มาของการคำนวณ (หักค่าใช้จ่ายตามกฎหมายให้แล้วอัตโนมัติ)</p>
-                    <div class="flex flex-wrap gap-4 text-xs font-medium text-slate-600 bg-slate-50 p-3 rounded-xl">
-                        <div>หักค่าใช้จ่าย: <span id="out-expense" class="text-slate-800">0</span> บาท</div>
-                        <div>ลดหย่อนส่วนตัว: <span class="text-slate-800">60,000</span> บาท</div>
-                        <div>เงินได้สุทธิ: <span id="out-net-income" class="text-blue-600">0</span> บาท</div>
+                <!-- รายละเอียดที่มาที่ไป -->
+                <div class="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between">
+                    <p class="text-xs font-medium text-slate-500 flex items-center gap-1.5">
+                        <i data-lucide="info" class="w-4 h-4"></i> ข้อมูลหักค่าใช้จ่ายอัตโนมัติตามกฎหมาย
+                    </p>
+                    <div class="flex gap-4 text-xs font-medium text-slate-500">
+                        <div>เงินได้สุทธิ: <span id="out-net-income" class="text-slate-800 font-bold">0</span> บาท</div>
                     </div>
                 </div>
             </div>
 
+            <!-- 2. เช็กลิสต์เอกสาร -->
             <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 md:p-8">
                 <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-6 gap-4">
                     <div>
                         <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                            📂 ตามล่าหาเอกสาร
+                            <i data-lucide="folder-check" class="w-6 h-6 text-blue-600"></i>
+                            รายการเอกสารสำคัญ
                         </h2>
-                        <p class="text-sm text-slate-500 mt-1">ติ๊กเก็บให้ครบ สรรพากรเรียกตรวจก็ไม่หวั่น!</p>
+                        <p class="text-sm text-slate-500 mt-1">ตรวจสอบและจัดเก็บเอกสารเพื่อป้องกันการตรวจสอบย้อนหลัง</p>
                     </div>
+                    <!-- Progress Bar -->
                     <div class="w-full md:w-48 text-right">
-                        <p class="text-xs font-bold text-blue-600 mb-1" id="progress-text">เก็บแล้ว 0/6</p>
-                        <div class="w-full bg-slate-100 rounded-full h-2.5">
-                            <div id="progress-bar" class="bg-blue-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                        <p class="text-xs font-bold text-slate-600 mb-1.5" id="progress-text">ดำเนินการแล้ว 0/5</p>
+                        <div class="w-full bg-slate-100 rounded-full h-2">
+                            <div id="progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="checklist-container">
-                    </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="checklist-container">
+                    <!-- Checklists renders here -->
+                </div>
             </div>
 
         </div>
 
+        <!-- ฝั่งขวา: แชทบอทปรึกษาภาษี -->
         <div class="lg:col-span-5 flex flex-col h-full min-h-[500px]">
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-1 flex flex-col h-full relative overflow-hidden">
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-100 flex flex-col h-full overflow-hidden">
                 
-                <div class="bg-gradient-to-r from-slate-800 to-slate-700 text-white p-4 rounded-t-2xl flex items-center justify-between">
+                <!-- หัวแชท -->
+                <div class="bg-white border-b border-slate-100 p-4 flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-xl shadow-sm">🐻‍❄️</div>
+                        <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center shadow-sm border border-blue-100">
+                            <i data-lucide="bot" class="w-5 h-5"></i>
+                        </div>
                         <div>
-                            <h3 class="font-bold text-sm">Tax Buddy AI</h3>
-                            <p class="text-[10px] text-slate-300">ตอบไวทันใจ ให้คำปรึกษาฟรี</p>
+                            <h3 class="font-bold text-sm text-slate-800">Tax Assistant AI</h3>
+                            <p class="text-[10px] font-medium text-emerald-500 flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span> ออนไลน์พร้อมให้คำปรึกษา
+                            </p>
+                        </div>
+                    </div>
+                    <button class="text-slate-400 hover:text-slate-600 transition-colors">
+                        <i data-lucide="more-horizontal" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <!-- พื้นที่แชท -->
+                <div id="chat-box" class="flex-grow bg-slate-50/50 p-5 overflow-y-auto space-y-5">
+                    <!-- ข้อความเริ่มต้นจากบอท -->
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 mt-1">
+                            <i data-lucide="bot" class="w-4 h-4"></i>
+                        </div>
+                        <div class="bg-white border border-slate-200 p-3.5 rounded-2xl rounded-tl-none max-w-[85%] text-sm text-slate-700 shadow-sm leading-relaxed">
+                            สวัสดีครับ ต้องการสอบถามข้อมูลด้านภาษี หรือให้ผมช่วยแนะนำเรื่องไหน สามารถเลือกหัวข้อด้านล่างหรือพิมพ์ถามได้เลยครับ
                         </div>
                     </div>
                 </div>
 
-                <div id="chat-box" class="flex-grow bg-slate-50 p-4 overflow-y-auto space-y-4">
-                    <div class="flex items-start gap-2">
-                        <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-sm flex-shrink-0">🐻‍❄️</div>
-                        <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-tl-none max-w-[85%] text-sm text-slate-700 shadow-sm">
-                            สวัสดีครับ! มีอะไรให้ผมช่วยเรื่องภาษีไหมเอ่ย?<br><br>
-                            กดปุ่มคำถามยอดฮิตด้านล่าง หรือพิมพ์ถามมาได้เลยครับ 👇
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white px-4 py-3 border-t border-slate-100">
-                    <div class="flex flex-wrap gap-2 mb-3">
-                        <button onclick="askPreset('50ทวิ')" class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 rounded-full transition-colors font-medium">📄 50 ทวิ คืออะไร?</button>
-                        <button onclick="askPreset('ลดหย่อน')" class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 rounded-full transition-colors font-medium">💰 อะไรใช้ลดหย่อนได้บ้าง?</button>
-                        <button onclick="askPreset('ย้อนหลัง')" class="text-xs bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 rounded-full transition-colors font-medium">🛑 กลัวโดนย้อนหลังทำไงดี?</button>
+                <!-- ช่องพิมพ์และปุ่มด่วน -->
+                <div class="bg-white px-4 py-4 border-t border-slate-100">
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <button onclick="askPreset('50ทวิ')" class="text-xs bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 px-3 py-1.5 rounded-lg transition-colors font-medium flex items-center gap-1.5">
+                            <i data-lucide="file-text" class="w-3.5 h-3.5"></i> 50 ทวิ คืออะไร?
+                        </button>
+                        <button onclick="askPreset('ลดหย่อน')" class="text-xs bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 px-3 py-1.5 rounded-lg transition-colors font-medium flex items-center gap-1.5">
+                            <i data-lucide="piggy-bank" class="w-3.5 h-3.5"></i> รายการลดหย่อน
+                        </button>
+                        <button onclick="askPreset('ย้อนหลัง')" class="text-xs bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 px-3 py-1.5 rounded-lg transition-colors font-medium flex items-center gap-1.5">
+                            <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i> เลี่ยงภาษีย้อนหลัง
+                        </button>
                     </div>
 
-                    <div class="flex gap-2">
-                        <input type="text" id="user-input" placeholder="พิมพ์คำถามของคุณ..." class="flex-grow bg-slate-100 border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 transition-shadow" onkeypress="if(event.key === 'Enter') sendMessage()">
-                        <button onclick="sendMessage()" class="bg-slate-800 hover:bg-slate-700 text-white px-5 py-3 rounded-xl text-sm font-medium transition-colors">ส่ง</button>
+                    <!-- Input Box -->
+                    <div class="relative flex items-center">
+                        <input type="text" id="user-input" placeholder="พิมพ์ข้อความที่นี่..." class="flex-grow bg-slate-50 border border-slate-200 rounded-xl pl-4 pr-12 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow" onkeypress="if(event.key === 'Enter') sendMessage()">
+                        <button onclick="sendMessage()" class="absolute right-2 p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -163,25 +214,27 @@
 
     </main>
 
+    <!-- JavaScript ลอจิก -->
     <script>
-        // --- ส่วนที่ 1: ระบบแชทบอท (ภาษาเป็นกันเองขึ้น) ---
+        // กำหนดข้อมูลฐานความรู้
         const taxKnowledge = {
-            "50ทวิ": "📄 <b>ใบ 50 ทวิ</b> เหมือน 'ใบเสร็จ' ที่ลูกค้ายืนยันว่าหักเงินเราไปจ่ายภาษีล่วงหน้าแล้ว (ปกติ 3%)<br><br><b>วิธีใช้:</b> ตอนสิ้นปี เอาใบนี้มารวมกัน ยอดที่โดนหักไปแล้วจะเอามาเป็นส่วนลดภาษีได้ครับ! ห้ามทิ้งเด็ดขาดนะ",
-            "ลดหย่อน": "💰 <b>ตัวช่วยลดภาษีพื้นฐานสำหรับมือใหม่:</b><br><br>✅ ทุกคนได้ลดหย่อนตัวเอง 60,000 บาทฟรีๆ<br>✅ ประกันสังคม (ที่จ่ายจริง)<br>✅ ประกันชีวิต / ประกันสุขภาพ<br>✅ กองทุน SSF / RMF / ThaiESG<br>✅ ช้อปดีมีคืน (หรือ Easy E-Receipt ตามนโยบายรัฐปีนั้นๆ)",
-            "ย้อนหลัง": "🛑 <b>วิธีรับมือไม่ให้สรรพากรตกใจ:</b><br><br>1. <b>แยกบัญชี:</b> บัญชีรับเงินทำงาน กับ บัญชีใช้จ่ายส่วนตัว ควรแยกกัน จะได้ทำบัญชีง่าย<br>2. <b>เก็บหลักฐาน:</b> เก็บใบ 50 ทวิ และสลิปค่าใช้จ่ายงาน (ถ้ามี)<br>3. <b>ยื่นให้ตรงเวลา:</b> แม้รายได้ไม่ถึงเกณฑ์ต้องจ่ายภาษี ก็ต้อง 'ยื่นแบบแสดงรายได้' นะครับ เพื่อความโปร่งใส",
-            "ประเภทภาษี": "💡 <b>สำหรับฟรีแลนซ์:</b><br>ส่วนใหญ่จะเป็นเงินได้ <b>มาตรา 40(2)</b> ครับ คือรับจ้างทั่วไป หักค่าใช้จ่ายแบบเหมาได้ 50% (แต่ไม่เกินแสนเดียว)<br><br>แต่ถ้าคุณเป็นแก๊งโปรดักชัน ต้องขนกล้อง ขนไฟไปเอง จัดเป็น <b>มาตรา 40(7)</b> หักค่าใช้จ่ายได้ถึง 60% เลยครับ!"
+            "50ทวิ": "<span class='font-semibold text-slate-800'>ใบ 50 ทวิ (หนังสือรับรองการหักภาษี ณ ที่จ่าย)</span><br><br>เปรียบเสมือน 'ใบเสร็จ' ที่ผู้ว่าจ้างยืนยันว่าได้หักเงินเราไปชำระภาษีล่วงหน้าแล้ว (โดยทั่วไปคือ 3%)<br><br><span class='text-blue-600 font-medium'>ข้อแนะนำ:</span> เมื่อถึงรอบยื่นภาษีประจำปี ยอดเงินที่ถูกหักไปแล้วทั้งหมดสามารถนำมาใช้เป็นส่วนลดในการชำระภาษีก้อนใหญ่ได้ กรุณาเก็บรักษาเอกสารนี้ให้ครบถ้วนครับ",
+            "ลดหย่อน": "<span class='font-semibold text-slate-800'>สิทธิประโยชน์ในการลดหย่อนภาษี</span><br><br>การลดหย่อนภาษีเปรียบเสมือนคูปองส่วนลด ยิ่งมีมาก ยิ่งชำระภาษีน้อยลง สิทธิพื้นฐานที่สามารถใช้ได้ ได้แก่:<br><ul class='list-disc list-inside mt-2 space-y-1 text-slate-600 ml-1'><li class='pl-1'>ลดหย่อนส่วนตัว (60,000 บาทอัตโนมัติ)</li><li class='pl-1'>เงินสมทบกองทุนประกันสังคม</li><li class='pl-1'>เบี้ยประกันชีวิต / ประกันสุขภาพ</li><li class='pl-1'>กองทุนลดหย่อนภาษี (SSF, RMF, ThaiESG)</li></ul>",
+            "ย้อนหลัง": "<span class='font-semibold text-slate-800'>แนวทางป้องกันการถูกตรวจสอบภาษีย้อนหลัง</span><br><br><ul class='space-y-2 mt-2'><li class='flex items-start gap-2'><i data-lucide='check' class='w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0'></i> <span><b>แยกบัญชีรับเงิน:</b> แยกบัญชีรายได้ออกจากบัญชีใช้จ่ายส่วนตัว เพื่อให้สรุปบัญชีได้ง่าย</span></li><li class='flex items-start gap-2'><i data-lucide='check' class='w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0'></i> <span><b>จัดเก็บหลักฐาน:</b> รวบรวมใบ 50 ทวิ และใบเสร็จรับเงินที่เกี่ยวข้องกับการทำงานอย่างเป็นระบบ</span></li><li class='flex items-start gap-2'><i data-lucide='check' class='w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0'></i> <span><b>ยื่นแบบให้ตรงเวลา:</b> แม้รายได้สุทธิจะไม่ถึงเกณฑ์ที่ต้องชำระภาษี ก็ควรยื่นแบบแสดงรายได้เพื่อสร้างความโปร่งใสในระบบ</span></li></ul>",
+            "ประเภทภาษี": "<span class='font-semibold text-slate-800'>ประเภทของภาษีสำหรับสายงานอิสระ</span><br><br><b>1. รับจ้างทั่วไป (มาตรา 40(2)):</b><br>สามารถหักค่าใช้จ่ายแบบเหมาได้ 50% (สูงสุดไม่เกิน 100,000 บาท)<br><br><b>2. งานโปรดักชัน / รับเหมา (มาตรา 40(7)):</b><br>หากจำเป็นต้องจัดเตรียมอุปกรณ์และทีมงานเอง สามารถหักค่าใช้จ่ายแบบเหมาได้สูงถึง 60% ของรายได้ครับ"
         };
 
+        // ฟังก์ชันระบบแชท
         function sendMessage() {
             const inputEl = document.getElementById('user-input');
             const chatBox = document.getElementById('chat-box');
             const query = inputEl.value.trim();
             if(!query) return;
 
-            // พิมพ์ข้อความฝั่งผู้ใช้
+            // ฝั่งผู้ใช้
             chatBox.innerHTML += `
                 <div class="flex items-start gap-2 justify-end mb-4">
-                    <div class="bg-blue-600 text-white p-3 rounded-2xl rounded-tr-none max-w-[85%] text-sm shadow-sm">
+                    <div class="bg-blue-600 text-white p-3 rounded-2xl rounded-tr-none max-w-[85%] text-sm shadow-sm font-medium">
                         ${query}
                     </div>
                 </div>
@@ -191,41 +244,44 @@
 
             // จำลอง AI คิดและตอบกลับ
             setTimeout(() => {
-                let reply = "ขออภัยครับ พี่ยังไม่ค่อยเข้าใจคำถามนี้เท่าไหร่ 😅 ลองเลือกกดจากปุ่มคำถามยอดฮิตด้านบน หรือพิมพ์ถามเรื่องเบื้องต้นได้เลยครับ";
+                let reply = "ระบบยังไม่พบข้อมูลที่ตรงกับคำถามของคุณครับ กรุณาเลือกหัวข้อจากปุ่มแนะนำ หรือระบุคำถามให้ชัดเจนขึ้นครับ";
                 
                 if(query.includes('50') || query.includes('ทวิ') || query.includes('หัก')) reply = taxKnowledge["50ทวิ"];
                 else if(query.includes('ลดหย่อน') || query.includes('ประกัน') || query.includes('กองทุน')) reply = taxKnowledge["ลดหย่อน"];
                 else if(query.includes('ย้อนหลัง') || query.includes('ตรวจ') || query.includes('กลัว')) reply = taxKnowledge["ย้อนหลัง"];
-                else if(query.includes('อาชีพ') || query.includes('ฟรีแลนซ์') || query.includes('มาตรา')) reply = taxKnowledge["ประเภทภาษี"];
+                else if(query.includes('อาชีพ') || query.includes('ฟรีแลนซ์') || query.includes('มาตรา') || query.includes('รับจ้าง') || query.includes('โปรดักชัน')) reply = taxKnowledge["ประเภทภาษี"];
 
                 chatBox.innerHTML += `
-                    <div class="flex items-start gap-2 mb-4">
-                        <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-sm flex-shrink-0">🐻‍❄️</div>
-                        <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-tl-none max-w-[85%] text-sm text-slate-700 shadow-sm leading-relaxed">
+                    <div class="flex items-start gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 mt-1">
+                            <i data-lucide="bot" class="w-4 h-4"></i>
+                        </div>
+                        <div class="bg-white border border-slate-200 p-3.5 rounded-2xl rounded-tl-none max-w-[85%] text-sm text-slate-700 shadow-sm leading-relaxed">
                             ${reply}
                         </div>
                     </div>
                 `;
+                // อัปเดตไอคอนในข้อความใหม่
+                lucide.createIcons();
                 chatBox.scrollTop = chatBox.scrollHeight;
-            }, 600);
+            }, 500);
         }
 
         function askPreset(key) {
             const inputEl = document.getElementById('user-input');
-            if(key === '50ทวิ') inputEl.value = "50 ทวิ คืออะไร?";
-            if(key === 'ลดหย่อน') inputEl.value = "อะไรใช้ลดหย่อนภาษีได้บ้าง?";
-            if(key === 'ย้อนหลัง') inputEl.value = "กลัวโดนภาษีย้อนหลัง ต้องทำยังไง?";
+            if(key === '50ทวิ') inputEl.value = "เอกสาร 50 ทวิ คืออะไร?";
+            if(key === 'ลดหย่อน') inputEl.value = "รายการใดใช้ลดหย่อนภาษีได้บ้าง?";
+            if(key === 'ย้อนหลัง') inputEl.value = "วิธีป้องกันการถูกตรวจสอบภาษีย้อนหลัง";
             sendMessage();
         }
 
-        // --- ส่วนที่ 2: ระบบคำนวณภาษี ---
+        // ฟังก์ชันคำนวณภาษี
         function calculateTax() {
             const incomeType = document.getElementById('income-type').value;
             const grossIncome = parseFloat(document.getElementById('gross-income').value) || 0;
             const extraAllowance = parseFloat(document.getElementById('allowance').value) || 0;
             
             let expense = 0;
-            // คำนวณค่าใช้จ่าย
             if (incomeType === "40_1" || incomeType === "40_2") {
                 expense = Math.min(grossIncome * 0.5, 100000);
             } else if (incomeType === "40_7") {
@@ -236,11 +292,10 @@
             let netIncome = grossIncome - expense - personalAllowance - extraAllowance;
             if (netIncome < 0) netIncome = 0;
 
-            // คำนวณขั้นบันไดภาษี
             let tax = 0;
             let remain = netIncome;
             
-            let step1 = Math.min(remain, 150000); // 0%
+            let step1 = Math.min(remain, 150000);
             remain -= step1;
 
             if (remain > 0) { let step2 = Math.min(remain, 150000); tax += step2 * 0.05; remain -= step2; }
@@ -251,39 +306,51 @@
             if (remain > 0) { let step7 = Math.min(remain, 3000000); tax += step7 * 0.30; remain -= step7; }
             if (remain > 0) { tax += remain * 0.35; }
 
-            // อัปเดตหน้าจอ
-            document.getElementById('out-expense').innerText = expense.toLocaleString();
             document.getElementById('out-net-income').innerText = netIncome.toLocaleString();
-            document.getElementById('out-tax-due').innerHTML = `${Math.round(tax).toLocaleString()} <span class="text-xl font-normal opacity-80">บาท</span>`;
+            document.getElementById('out-tax-due').innerText = Math.round(tax).toLocaleString();
             document.getElementById('out-monthly-save').innerText = `${Math.round(tax / 12).toLocaleString()} บาท`;
 
-            // แจ้งเตือน VAT
             const vatWarning = document.getElementById('vat-warning');
             if (grossIncome > 1800000) vatWarning.classList.remove('hidden');
             else vatWarning.classList.add('hidden');
         }
 
-        // --- ส่วนที่ 3: ระบบเช็กลิสต์และ Progress Bar ---
+        // ฟังก์ชันระบบเช็กลิสต์
         const documents = [
-            { id: 1, title: "ขอใบ 50 ทวิ จากลูกค้า", desc: "หลักฐานว่าโดนหักภาษีไปแล้ว" },
-            { id: 2, title: "ดึงสเตทเมนต์บัญชีธนาคาร", desc: "สรุปยอดเงินเข้าทั้งปี" },
-            { id: 3, title: "ใบเสร็จค่าของ / อุปกรณ์", desc: "ต้องเป็นใบกำกับภาษีชื่อเรา" },
-            { id: 4, title: "ใบเสร็จค่าลดหย่อน", desc: "เช่น ประกัน, กองทุน" },
-            { id: 5, title: "สรุปรายรับ-รายจ่าย (Excel)", desc: "ทำบัญชีง่ายๆ ของตัวเอง" },
-            { id: 6, title: "ใบเสนอราคา / สัญญาจ้าง", desc: "เผื่อโดนตรวจสอบที่มาเงิน" }
+            { id: 1, icon: "file-signature", title: "ขอใบ 50 ทวิ จากผู้ว่าจ้างทุกครั้ง", desc: "หลักฐานยืนยันการหักภาษีล่วงหน้า" },
+            { id: 2, icon: "receipt", title: "รวบรวมใบเสร็จค่าอุปกรณ์การทำงาน", desc: "เช่น กล้อง, เลนส์ (ระบุชื่อนามสกุลผู้ซื้อชัดเจน)" },
+            { id: 3, icon: "credit-card", title: "สลิปค่าซอฟต์แวร์รายเดือน", desc: "เช่น โปรแกรมตัดต่อ หรือระบบคลาวด์" },
+            { id: 4, icon: "file-bar-chart", title: "จัดเตรียมสเตทเมนต์บัญชีธนาคาร", desc: "เพื่อตรวจสอบยอดรายรับตลอดปี" },
+            { id: 5, icon: "shield-plus", title: "เอกสารสิทธิลดหย่อน", desc: "ใบเสร็จเบี้ยประกัน, เอกสารกองทุนรวม" }
         ];
 
         function renderChecklist() {
             const container = document.getElementById('checklist-container');
             container.innerHTML = documents.map(doc => `
-                <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100 hover:bg-slate-100 cursor-pointer transition-all group">
-                    <input type="checkbox" class="doc-checkbox mt-1 w-5 h-5 text-blue-600 rounded border-slate-300 focus:ring-blue-500" onchange="updateProgress()">
-                    <div>
-                        <span class="block text-sm font-bold text-slate-700 group-hover:text-blue-700 transition-colors">${doc.title}</span>
-                        <span class="block text-xs text-slate-500 mt-0.5">${doc.desc}</span>
+                <label class="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-blue-200 cursor-pointer transition-all group">
+                    <div class="relative flex items-center justify-center mt-0.5">
+                        <input type="checkbox" class="doc-checkbox w-5 h-5 appearance-none border-2 border-slate-300 rounded focus:ring-0 checked:bg-blue-600 checked:border-blue-600 transition-all cursor-pointer" onchange="updateProgress()">
+                        <i data-lucide="check" class="absolute w-3 h-3 text-white pointer-events-none opacity-0 transition-opacity peer-checked:opacity-100" style="left: 4px; top: 4px;"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <div class="flex items-center gap-1.5 mb-1">
+                            <i data-lucide="${doc.icon}" class="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors"></i>
+                            <span class="block text-sm font-semibold text-slate-700 group-hover:text-blue-700 transition-colors">${doc.title}</span>
+                        </div>
+                        <span class="block text-xs text-slate-500 ml-5.5">${doc.desc}</span>
                     </div>
                 </label>
             `).join('');
+            
+            // อัปเดตไอคอนในเช็กลิสต์
+            lucide.createIcons();
+            
+            // เพิ่ม CSS พิเศษสำหรับซ่อนไอคอนติ๊กถูกเมื่อยังไม่ได้เลือก
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .doc-checkbox:checked + i { opacity: 1 !important; }
+            `;
+            document.head.appendChild(style);
         }
 
         function updateProgress() {
@@ -293,21 +360,21 @@
             
             const percentage = (checkedCount / documents.length) * 100;
             document.getElementById('progress-bar').style.width = percentage + '%';
-            document.getElementById('progress-text').innerText = `เก็บแล้ว ${checkedCount}/${documents.length}`;
+            document.getElementById('progress-text').innerText = `ดำเนินการแล้ว ${checkedCount}/${documents.length}`;
             
-            // เปลี่ยนสี Progress bar เมื่อครบ
             if(checkedCount === documents.length) {
-                document.getElementById('progress-bar').classList.replace('bg-blue-500', 'bg-emerald-500');
-                document.getElementById('progress-text').classList.replace('text-blue-600', 'text-emerald-600');
-                document.getElementById('progress-text').innerText = '🎉 เก็บครบพร้อมยื่น!';
+                document.getElementById('progress-bar').classList.replace('bg-blue-600', 'bg-emerald-500');
+                document.getElementById('progress-text').innerHTML = `<span class="flex items-center gap-1 justify-end"><i data-lucide="check-circle-2" class="w-4 h-4"></i> เอกสารครบถ้วน!</span>`;
+                lucide.createIcons();
             } else {
-                document.getElementById('progress-bar').classList.replace('bg-emerald-500', 'bg-blue-500');
-                document.getElementById('progress-text').classList.replace('text-emerald-600', 'text-blue-600');
+                document.getElementById('progress-bar').classList.replace('bg-emerald-500', 'bg-blue-600');
+                document.getElementById('progress-text').innerText = `ดำเนินการแล้ว ${checkedCount}/${documents.length}`;
             }
         }
 
-        // โหลดข้อมูลเมื่อเปิดหน้าเว็บ
+        // เริ่มต้นการทำงาน
         window.onload = function() {
+            lucide.createIcons(); // วาดไอคอนทั้งหมดเมื่อเปิดหน้าเว็บ
             calculateTax();
             renderChecklist();
         }
